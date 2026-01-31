@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="stylesheet.css">
+    <script src="scripts/background.js"></script>
+    <script src="scripts/typing.js"></script>
+</head>
+
+<body class="iframe-body">
+    <div class="content">
+        <div class="panel">
+            <div class="panel-title" id="typing-text">
+                mt central
+            </div>
+            <div class="panel-content">
+                the best site for mission trail middle school. made by liam s.
+            </div>
+            <div class="panel-content" style="color: red">
+                THIS IS THE TEST BRANCH. THINGS WILL AND CAN BREAK.
+            </div>
+        </div>
+    </div>
+    <canvas id="bg-canvas"></canvas>
+    <script>
+        new TypingEffect('#typing-text', {
+            text: 'mt central',
+            speed: 80,
+            delay: 1000,
+            loop: true,
+            cursor: true,
+            cursorChar: '_',
+            deleteSpeed: 50,
+            pauseEnd: 5000,
+        });
+    </script>
+</body>
+
+</html>

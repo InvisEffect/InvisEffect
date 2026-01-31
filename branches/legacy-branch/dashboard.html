@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT Central | Staff Dashboard</title>
+    <link rel="stylesheet" href="stylesheet.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Specific overrides to make the table look like your Game Cards */
+        .dash-layout {
+            margin-left: 90px;
+            padding: 20px;
+            text-align: left;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(var(--primary-purple-rgb), 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            animation: pulse-glow 3s infinite alternate ease-in-out;
+        }
+
+        .stat-card h3 {
+            color: var(--tertiary-purple);
+            margin: 0;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .stat-card p {
+            font-size: 2rem;
+            margin: 10px 0 0 0;
+            font-weight: bold;
+        }
+
+        .table-container {
+            background: rgba(10, 10, 12, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(var(--primary-purple-rgb), 0.3);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            color: var(--tertiary-purple);
+            text-align: left;
+            padding: 15px;
+            border-bottom: 1px solid rgba(var(--primary-purple-rgb), 0.2);
+            font-size: 0.9rem;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+        }
+
+        tr:hover {
+            background: rgba(var(--primary-purple-rgb), 0.05);
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge-approved {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .badge-pending {
+            background: #ffbb33;
+            color: black;
+        }
+
+        .badge-denied {
+            background: #f44336;
+            color: white;
+        }
+
+        .search-wrapper {
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        #userSearch {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .action-btn {
+            background: transparent;
+            box-shadow: none;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+
+        .action-btn:hover {
+            animation: none;
+            background: rgba(var(--primary-purple-rgb), 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <button onclick="location.href='index.html'">
+            <span class="icon">🏠</span>
+            <span class="label">home</span>
+        </button>
+
+        <button onclick="location.href='games.html'">
+            <span class="icon">🎮</span>
+            <span class="label">games</span>
+        </button>
+
+        <button onclick="location.href='chat.html'">
+            <span class="icon">💬</span>
+            <span class="label">chat</span>
+        </button>
+
+        <button onclick="location.href='proxy.html'">
+            <span class="icon">🛜</span>
+            <span class="label">proxy</span>
+        </button>
+
+        <button onclick="location.href='https://google.com'">
+            <span class="icon">❗</span>
+            <span class="label">panic</span>
+        </button>
+    </nav>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="dash-layout">
+        <h1 style="text-shadow: 0 0 15px var(--primary-purple);">Staff Dashboard</h1>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Pending Requests</h3>
+                <p id="stat-pending">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <p id="stat-total">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Chat History</h3>
+                <button onclick="clearAllMessages()" style="background: #f44336; width: 100%; margin: 10px 0 0 0;">Clear
+                    All Messages</button>
+            </div>
+        </div>
+
+        <div class="search-wrapper">
+            <input type="text" id="userSearch" placeholder="Search users..." oninput="loadDashboard()">
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Real Name</th>
+                        <th>Username & Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="user-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="scripts/dashboard.js"></script>
+</body>
+
+</html>

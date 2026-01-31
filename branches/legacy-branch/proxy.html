@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT Central | Browser</title>
+    <link rel="stylesheet" href="stylesheet.css">
+    <style>
+        .navbar {
+            position: fixed; /* Fixes it to the side regardless of scroll */
+            z-index: 100; /* Keeps buttons ABOVE the iframe */
+        }
+        /* --- Browser Viewport Area --- */
+        .viewport-container {
+            margin: 0;
+            padding: 0;
+            flex-grow: 1; /* Take up all remaining space to the right */
+            height: 100vh;
+            background: #fff;
+            position: relative;
+        }
+
+        #browser-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Floating Home Button (Proxy Reset) */
+        .proxy-home-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1000;
+            width: 55px;
+            height: 55px;
+            border-radius: 50% !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <button onclick="location.href='index.html'">
+            <span class="icon">🏠</span>
+            <span class="label">home</span>
+        </button>
+
+        <button onclick="location.href='games.html'">
+            <span class="icon">🎮</span>
+            <span class="label">games</span>
+        </button>
+
+        <button onclick="location.href='chat.html'">
+            <span class="icon">💬</span>
+            <span class="label">chat</span>
+        </button>
+
+        <button onclick="location.href='proxy.html'">
+            <span class="icon">🛜</span>
+            <span class="label">proxy</span>
+        </button>
+
+        <button onclick="location.href='https://google.com'">
+            <span class="icon">❗</span>
+            <span class="label">panic</span>
+        </button>
+    </nav>
+
+    <main class="viewport-container">
+        <iframe id="browser-frame" src="https://d2qtjrlsrgzzk7.cloudfront.net/"></iframe>
+    </main>
+
+    <button class="proxy-home-btn" title="Return to Proxy Home" onclick="resetProxy()">
+        🏠
+    </button>
+
+    <script>
+        function resetProxy() {
+            const frame = document.getElementById('browser-frame');
+            frame.src = "https://d2qtjrlsrgzzk7.cloudfront.net/";
+        }
+    </script>
+</body>
+
+</html>

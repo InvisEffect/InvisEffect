@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="stylesheet.css">
+    <script src="scripts/background.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        #viewportContainer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+        }
+
+        #viewportContainer.active {
+            display: block;
+        }
+
+        #mainViewport {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+
+        /* Category Filter */
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .category-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+        }
+
+        .category-btn.active {
+            background: rgba(168, 50, 255, 0.2);
+            border-color: var(--primary-purple);
+            color: var(--primary-purple);
+        }
+
+        .game-category {
+            font-size: 12px;
+            color: var(--text-dim);
+            display: block;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="viewport" id="viewportContainer">
+        <button class="game-close" id="closeGame" title="Close Game">
+            <i class="fas fa-times"></i>
+        </button>
+        <iframe id="mainViewport" allowfullscreen></iframe>
+    </div>
+
+    <main class="main-content">
+        <div class="search-container">
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" class="search-bar" placeholder="search for a game..." id="gameSearch">
+            </div>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="category-filter" id="categoryFilter">
+            <button class="category-btn active" onclick="filterByCategory('all')">All</button>
+            <button class="category-btn" onclick="filterByCategory('action')">Action</button>
+            <button class="category-btn" onclick="filterByCategory('racing')">Racing</button>
+            <button class="category-btn" onclick="filterByCategory('puzzle')">Puzzle</button>
+            <button class="category-btn" onclick="filterByCategory('idle')">Idle</button>
+            <button class="category-btn" onclick="filterByCategory('strategy')">Strategy</button>
+            <button class="category-btn" onclick="filterByCategory('platformer')">Platformer</button>
+            <button class="category-btn" onclick="filterByCategory('sports')">Sports</button>
+            <button class="category-btn" onclick="filterByCategory('simulation')">Simulation</button>
+            <button class="category-btn" onclick="filterByCategory('casual')">Casual</button>
+            <button class="category-btn" onclick="filterByCategory('creative')">Creative</button>
+            <button class="category-btn" onclick="filterByCategory('sandbox')">Sandbox</button>
+            <button class="category-btn" onclick="filterByCategory('shooter')">Shooter</button>
+            <button class="category-btn" onclick="filterByCategory('multiplayer')">Multiplayer</button>
+            <button class="category-btn" onclick="filterByCategory('horror')">Horror</button>
+            <button class="category-btn" onclick="filterByCategory('utility')">Utility</button>
+            <button class="category-btn" onclick="filterByCategory('casino')">Casino</button>
+        </div>
+
+        <div class="games-grid" id="gamesGrid"></div>
+    </main>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <script>
+        // Initialize Supabase
+        const { createClient } = supabase;
+        const client = createClient(
+            'https://hrlestmlnturqnolgrnj.supabase.co',
+            'sb_publishable_aE9TR0gKtveD6EQrKNOeRg_BcQqEZ3-'
+        );
+        
+        let games = [];
+        let currentCategory = 'all';
+
+        // Load games from Supabase
+        async function loadGames() {
+            try {
+                const { data, error } = await client
+                    .from('games')
+                    .select('*')
+                    .order('title', { ascending: true });
+                
+                if (error) throw error;
+                
+                games = data || [];
+                renderGames();
+            } catch (error) {
+                console.error('Error loading games from Supabase:', error);
+                // Fallback to JSON file if Supabase fails
+                try {
+                    const response = await fetch('games-data.json');
+                    games = await response.json();
+                    renderGames();
+                } catch (fallbackError) {
+                    console.error('Error loading games from fallback:', fallbackError);
+                }
+            }
+        }
+
+        // Category Filter
+        function filterByCategory(category) {
+            currentCategory = category;
+            
+            // Update active button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderGames();
+        }
+
+        // Game Display Functions
+        function openGame(link) {
+            const iframe = document.getElementById('mainViewport');
+            const overlay = document.getElementById('viewportContainer');
+            
+            iframe.src = link;
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeGame() {
+            const iframe = document.getElementById('mainViewport');
+            const overlay = document.getElementById('viewportContainer');
+            
+            overlay.classList.remove('active');
+            iframe.src = "";
+            document.body.style.overflow = '';
+        }
+
+        function renderGames(filter = "") {
+            const grid = document.getElementById('gamesGrid');
+            grid.innerHTML = "";
+
+            // Sort games alphabetically by title
+            const sortedGames = [...games].sort((a, b) =>
+                a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+            );
+
+            // Filter by search and category
+            const filtered = sortedGames.filter(game => {
+                const matchesSearch = game.title.toLowerCase().includes(filter.toLowerCase());
+                const matchesCategory = currentCategory === 'all' || game.category === currentCategory;
+                return matchesSearch && matchesCategory;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div style="text-align: center; color: var(--text-dim); padding: 40px;">No games found</div>';
+                return;
+            }
+
+            filtered.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.innerHTML = `
+                    <div class="game-thumbnail" style="background-image: url('${game.thumb}')"></div>
+                    <div class="game-info">
+                        <span class="game-title">${game.title}</span>
+                        <span class="game-category">${game.category}</span>
+                    </div>
+                `;
+                card.onclick = () => openGame(game.link);
+                grid.appendChild(card);
+            });
+        }
+
+        // Event Listeners
+        document.getElementById('closeGame').onclick = closeGame;
+        document.getElementById('gameSearch').addEventListener('input', (e) => renderGames(e.target.value));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") {
+                closeGame();
+            }
+        });
+
+        // Initial load
+        loadGames();
+    </script>
+</body>
+
+</html>

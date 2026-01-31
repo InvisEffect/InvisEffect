@@ -1,0 +1,481 @@
+/* --- Modern Glassmorphism Refresh --- */
+:root {
+  /* Core Brand Colors */
+  --primary-purple: #9f1aff;
+  --secondary-purple: #aa33ff;
+  --tertiary-purple: #bf4dff;
+  --dark-purple:   #5B21B6;
+  --darker-purple: #732df5;
+  --gradient1-purple: #9f1aff;
+  --gradient2-purple: #bf4dff;
+
+  /* Neutral Palette Refresh */
+  --bg: #0a0a0c;
+  --sidebar: rgba(14, 14, 17, 0.9);
+  --input: rgba(20, 20, 24, 0.8);
+  --black: #000000;
+
+  /* RGB values for transparency handling */
+  --primary-purple-rgb: 159, 26, 255;
+  --secondary-purple-rgb: 170, 51, 255;
+  --tertiary-purple-rgb: 191, 77, 255;
+  --dark-purple-rgb: 159, 26, 255;
+  --darker-purple-rgb: 138, 0, 230;
+  --gradient1-purple-rgb: 159, 26, 255;
+  --gradient2-purple-rgb: 191, 77, 255;
+  --bg-rgb: 10, 10, 12;
+  --dot-rgb: 34, 34, 38;
+  --sidebar-rgb: 14, 14, 17;
+  --input-rgb: 20, 20, 24;
+  --black-rgb: 0, 0, 0;
+
+  --p-h: 270; /* Base Hue */
+}
+
+/* --- Base Body Styles --- */
+body {
+  background-color: var(--bg);
+  background-image: 
+    radial-gradient(circle at 20% 30%, hsla(var(--p-h), 100%, 20%, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, hsla(280, 100%, 20%, 0.15) 0%, transparent 40%);
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #f0f0f0;
+  min-height: 99vh;
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+}
+
+#content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* --- Animations --- */
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 10px rgba(var(--primary-purple-rgb), 0.2),
+      inset 0 0 5px rgba(var(--primary-purple-rgb), 0.1);
+    border-color: rgba(var(--secondary-purple-rgb), 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(var(--primary-purple-rgb), 0.4),
+      inset 0 0 10px rgba(var(--primary-purple-rgb), 0.2);
+    border-color: var(--tertiary-purple);
+  }
+
+  100% {
+    box-shadow: 0 0 10px rgba(var(--primary-purple-rgb), 0.2),
+      inset 0 0 5px rgba(var(--primary-purple-rgb), 0.1);
+    border-color: rgba(var(--secondary-purple-rgb), 0.4);
+  }
+}
+
+@keyframes gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* --- Global Components --- */
+.glowing {
+  outline: 1px solid var(--secondary-purple);
+  outline-offset: 4px;
+  border-radius: 8px;
+  padding: 10px 20px;
+  animation: pulse-glow 3s infinite alternate ease-in-out;
+}
+
+button {
+  background: linear-gradient(135deg,
+      var(--darker-purple),
+      var(--primary-purple),
+      var(--tertiary-purple),
+      var(--darker-purple));
+  background-size: 300% 300%;
+  background-position: 0% 50%;
+  font-family: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 6.5px;
+  color: white;
+  padding: 7px 15px;
+  margin: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(var(--primary-purple-rgb), 0.5);
+  animation: gradient-flow 2s ease-in-out infinite;
+}
+
+/* --- Game Grid Section --- */
+.games-container {
+  display: grid;
+  grid-template-columns: repeat(6, 150px);
+  gap: 15px;
+  margin: 10px auto;
+  width: 980px;
+  height: auto;
+  justify-content: center;
+}
+
+.game-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 10px 15px;
+  text-align: center;
+  animation: pulse-glow 3s infinite alternate ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.game-card:hover {
+  background: rgba(var(--primary-purple-rgb), 0.1);
+  transform: translateY(-5px);
+}
+
+.back-button-container {
+  text-align: center;
+  padding-top: 20px;
+}
+
+.navbar button {
+  background: rgba(255, 255, 255, 0.02);
+  width: 72px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  color: white;
+
+  border-radius: 18px;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.navbar button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Icon */
+.navbar button .icon {
+  font-size: 1.15rem;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.navbar button:hover .icon {
+  transform: scale(1.15);
+}
+
+/* Active State */
+.active {
+  background-color: rgba(var(--secondary-purple-rgb), 0.2) !important;
+  border-bottom: 3px solid var(--secondary-purple); /* Border moved to bottom */
+}
+
+/* --- Chat & Messaging --- */
+#messages {
+  height: 65vh;
+  overflow-y: auto;
+  background: rgba(10, 10, 12, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: left;
+  border: 1px solid rgba(var(--primary-purple-rgb), 0.3);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Layout for the message item */
+.msg-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin: 5px 0;
+  transition: background-color 0.3s ease, border-radius 0.3s ease;
+}
+
+/* Roundness on hover */
+.msg-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+/* Container for the admin buttons */
+.admin-controls {
+  display: flex;
+  gap: 15px;
+  /* Spacing between pin and delete */
+  align-items: center;
+  margin-left: auto;
+  /* Extra insurance to stay right */
+}
+
+.admin-controls button {
+  font-size: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+.admin-controls button:hover {
+  transform: scale(1.2);
+}
+
+.username-label {
+  color: var(--tertiary-purple);
+  font-weight: bold;
+  margin-right: 10px;
+  text-shadow: 0 0 8px rgba(var(--tertiary-purple-rgb), 0.3);
+}
+
+/* --- Input Styling --- */
+.input-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+input,
+#gameSearch {
+  background-color: var(--input);
+  border: 1px solid rgba(var(--primary-purple-rgb), 0.4);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  outline: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+input:hover,
+#gameSearch:hover {
+  border-color: var(--secondary-purple);
+}
+
+input:focus,
+#gameSearch:focus {
+  border-color: var(--tertiary-purple);
+  box-shadow: 0 0 15px rgba(var(--primary-purple-rgb), 0.4);
+  background-color: rgba(var(--input-rgb), 1);
+}
+
+#username {
+  width: 150px;
+}
+
+#messageInput {
+  flex-grow: 1;
+}
+
+.search-container {
+  margin: 20px auto;
+  width: 100%;
+  max-width: 400px;
+}
+
+#cycling-message {
+  transition: opacity 0.5s ease-in-out;
+  font-style: italic;
+  color: var(--tertiary-purple);
+  opacity: 0.8;
+}
+
+#pinned-container {
+  margin-bottom: 10px;
+}
+
+#pinned-messages {
+  background: rgba(var(--primary-purple-rgb), 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px dashed rgba(var(--primary-purple-rgb), 0.4);
+  border-radius: 15px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+/* --- Pagination --- */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding-bottom: 20px;
+}
+
+.pagination-container button:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.active-page {
+  background: linear-gradient(135deg, var(--gradient1-purple), var(--gradient2-purple)) !important;
+  box-shadow: 0 0 15px var(--primary-purple);
+}
+
+/* --- Media Queries (Sizing Maintained) --- */
+@media (max-width: 1200px) {
+  .games-container {
+    grid-template-columns: repeat(5, 150px);
+    width: calc(5 * 150px + 60px);
+  }
+}
+
+@media (max-width: 1000px) {
+  .games-container {
+    grid-template-columns: repeat(4, 150px);
+    width: calc(4 * 150px + 45px);
+  }
+}
+
+@media (max-width: 800px) {
+  .games-container {
+    grid-template-columns: repeat(3, 150px);
+    width: calc(3 * 150px + 30px);
+  }
+}
+
+@media (max-width: 600px) {
+  .games-container {
+    grid-template-columns: repeat(2, 150px);
+    width: calc(2 * 150px + 15px);
+  }
+
+  body {
+    padding: 10px;
+  }
+
+  .sidebar {
+    width: 60px;
+  }
+
+  .sidebar:hover {
+    width: 160px;
+  }
+}
+
+@media (max-width: 400px) {
+  .games-container {
+    grid-template-columns: repeat(1, 150px);
+    width: 150px;
+  }
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 8px;
+}
+
+/* Animation for ADMIN & Username */
+@keyframes adminGlow {
+  0% {
+    color: #ff4444;
+    text-shadow: 0 0 5px #ff4444;
+  }
+
+  50% {
+    color: #ff8888;
+    text-shadow: 0 0 15px #ff0000;
+  }
+
+  100% {
+    color: #ff4444;
+    text-shadow: 0 0 5px #ff4444;
+  }
+}
+
+/* Animation for MOD & Username */
+@keyframes modPulse {
+  0% {
+    color: #bb86fc;
+    transform: scale(1);
+  }
+
+  50% {
+    color: #03dac6;
+  }
+
+  100% {
+    color: #bb86fc;
+    transform: scale(1);
+  }
+}
+
+/* Base Bold Classes */
+.role-admin {
+  font-weight: 600 !important;
+  animation: adminGlow 2s infinite;
+  text-transform: uppercase;
+}
+
+.role-mod {
+  font-weight: 600 !important;
+  animation: modPulse 2s infinite ease-in-out;
+  text-transform: uppercase;
+}
+
+.role-exec {
+  font-weight: 600 !important;
+  color: #ffbb33;
+  /* Gold color for Executive */
+  text-shadow: 0 0 10px rgba(255, 187, 51, 0.5);
+  text-transform: uppercase;
+}
+
+/* Applied to the container wrapping both username and tag */
+.animated-user-admin {
+  animation: adminGlow 2s infinite;
+  font-weight: bold;
+}
+
+.animated-user-mod {
+  animation: modPulse 2s infinite;
+  font-weight: bold;
+}
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; 
+            pointer-events: none;
+        }
