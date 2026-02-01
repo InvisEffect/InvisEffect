@@ -65,8 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fillStyle = isNearMouse 
-                ? 'rgba(194, 133, 255, 0.85)' 
-                : 'rgba(163, 71, 255, 0.35)';
+                ? 'rgba(41, 127, 240, 0.85)' 
+                : 'rgba(41, 127, 240, 0.35)';
             ctx.fill();
             
             // Draw connections
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (distSq < MAX_LINK_DIST) {
                     const opacity = (1 - distSq / MAX_LINK_DIST) * 0.2;
-                    ctx.strokeStyle = `rgba(163, 71, 255, ${opacity})`;
+                    ctx.strokeStyle = `rgba(41, 127, 240, ${opacity})`;
                     ctx.lineWidth = 0.8;
                     ctx.beginPath();
                     ctx.moveTo(p.x, p.y);

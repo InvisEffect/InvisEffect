@@ -46,8 +46,8 @@
         <div class="setup-panel">
 
             <div id="step-1" class="setup-step active">
-                <h2 class="panel-title">welcome to mt central!</h2>
-                <p class="panel-content">choose a disguise to hide this site in your browser history.</p>
+                <h2 class="panel-title">Welcome to InvisEffect</h2>
+                <p class="panel-content">Choose a disguise to hide this site in your browser history.</p>
                 <div class="disguise-grid">
                     <label class="disguise-option">
                         <input type="radio" name="disguise_select"
@@ -119,16 +119,16 @@
             </div>
 
             <div id="step-2" class="setup-step">
-                <h2 class="panel-title">panic key</h2>
-                <p class="panel-content">you can press this key to automatically redirect to a site of your choice, or
-                    google classroom, when a teacher walks by.</p>
+                <h2 class="panel-title">Panic Key</h2>
+                <p class="panel-content">You can press this key to automatically redirect to a site of your choice or
+                    Google Classroom when a teacher walks by.</p>
                 <div class="setup-field">
-                    <label>emergency key</label>
+                    <label>Emergency Key</label>
                     <input type="text" id="panic-key-input" class="setup-input" placeholder="Click and press a key..."
                         readonly onclick="captureKey()">
                 </div>
                 <div class="setup-field">
-                    <label>redirect to</label>
+                    <label>Redirect to...</label>
                     <input type="text" id="panic-url-input" class="setup-input" value="https://classroom.google.com">
                 </div>
                 <div class="setup-footer">
@@ -137,7 +137,7 @@
             </div>
 
             <div id="step-3" class="setup-step">
-                <h2 class="panel-title">tab cloaking</h2>
+                <h2 class="panel-title">Tab Cloaking</h2>
                 <p class="panel-content">Hide this site from extensions using an about:blank tab.</p>
                 <div class="cloak-box" onclick="document.getElementById('cloaking-toggle').click()">
                     <span>Enable about:blank Cloaking</span>
@@ -154,26 +154,26 @@
         <div class="sidebar-header">
             <img src="https://mtcentral.s3.us-east-1.amazonaws.com/test-branch/assets/logo.png" alt="Logo"
                 class="sidebar-logo">
-            <span class="logo-text">mt central</span>
+            <span class="logo-text">InvisEffect</span>
         </div>
         <div class="nav-item active" onclick="switchMainView('home')">
             <i class="fa-solid fa-house"></i>
-            <span>home</span>
+            <span>Home</span>
         </div>
         <div class="nav-item" onclick="switchMainView('games')">
             <i class="fa-solid fa-gamepad"></i>
-            <span>games</span>
+            <span>Games</span>
         </div>
         <div class="nav-item" onclick="switchMainView('updatelog')">
             <i class="fa-solid fa-plus"></i>
-            <span>update log</span>
+            <span>Update Log</span>
         </div>
 
         <div class="sidebar-spacer" style="margin-top: auto;"></div>
 
         <div class="nav-item" onclick="openSettings()">
             <i class="fa-solid fa-gear"></i>
-            <span>settings</span>
+            <span>Settings</span>
         </div>
 
         <div class="sidebar-status">
@@ -194,7 +194,7 @@
             <div class="search-wrapper">
                 <i class="fa-solid fa-rotate-right" onclick="refreshCurrentTab()"
                     style="cursor: pointer; color: var(--text-dim);"></i>
-                <input type="text" id="urlInput" class="search-bar" placeholder="search or enter url...">
+                <input type="text" id="urlInput" class="search-bar" placeholder="Search or enter URL...">
             </div>
         </header>
         <section class="viewport" id="viewportContainer">
@@ -517,7 +517,7 @@
             document.getElementById('urlInput').value =
                 activeTab.url.startsWith('http')
                     ? activeTab.url
-                    : `mtcentral://${activeTab.url.replace('.html', '')}`;
+                    : `inviseffect://${activeTab.url.replace('.html', '')}`;
         }
 
         function switchTab(id) {

@@ -5,10 +5,10 @@
 /* --- CSS Variables --- */
 :root {
     /* Brand Colors */
-    --primary-purple: #9500ff;
-    --secondary-purple: #9e17ff;
-    --tertiary-purple: #af25ff;
-    --accent-glow: rgba(149, 0, 255, 0.4);
+    --primary-blue: #297ff0;
+    --secondary-blue: #1e68d8;
+    --tertiary-blue: #1d5dd4;
+    --accent-glow: rgba(41, 127, 240, 0.4);
 
     /* Neutral Palette */
     --bg: #070709;
@@ -53,8 +53,8 @@ body {
     color: var(--text-main);
     background-color: #0f0f14;
     background-image:
-        radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--primary-purple) 18%, transparent) 0%, transparent 50%),
-        radial-gradient(circle at 100% 100%, color-mix(in srgb, var(--tertiary-purple) 12%, transparent) 0%, transparent 50%),
+        radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--primary-blue) 18%, transparent) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, color-mix(in srgb, var(--tertiary-blue) 12%, transparent) 0%, transparent 50%),
         radial-gradient(circle at 50% 50%, rgba(13, 13, 18, 1) 0%, rgba(15, 15, 20, 1) 100%);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -160,10 +160,10 @@ body {
     width: 200px;
     padding: 20px 16px;
     align-items: stretch;
-    border-right-color: rgba(184, 77, 255, 0.4);
+    border-right-color: rgba(41, 127, 240, 0.4);
     box-shadow: 2px 0 40px rgba(0, 0, 0, 0.6),
-        inset -1px 0 0 rgba(184, 77, 255, 0.25),
-        0 0 60px rgba(184, 77, 255, 0.15);
+        inset -1px 0 0 rgba(41, 127, 240, 0.25),
+        0 0 60px rgba(41, 127, 240, 0.15);
 }
 
 @media (max-width: 768px) {
@@ -218,7 +218,7 @@ body {
     width: 4px;
     height: 70%;
     border-radius: 0 4px 4px 0;
-    background: linear-gradient(180deg, var(--primary-purple), var(--secondary-purple));
+    background: linear-gradient(180deg, var(--primary-blue), var(--secondary-blue));
     transform: translateY(-50%) scaleY(0);
     transition: transform var(--duration-nav-item) var(--ease-smooth);
     box-shadow: 0 0 8px var(--accent-glow);
@@ -230,7 +230,7 @@ body {
     inset: 0;
     border-radius: var(--radius-sm);
     background: linear-gradient(135deg,
-            rgba(184, 77, 255, 0.12) 0%,
+            rgba(41, 127, 240, 0.12) 0%,
             transparent 100%);
     opacity: 0;
     transition: opacity var(--duration-normal) var(--ease);
@@ -248,7 +248,7 @@ body {
     border-color: rgba(255, 255, 255, 0.22);
     transform: translate3d(4px, 0, 0);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3),
-        0 0 20px rgba(184, 77, 255, 0.2);
+        0 0 20px rgba(41, 127, 240, 0.2);
 }
 
 .nav-item:hover::after {
@@ -257,9 +257,9 @@ body {
 
 .nav-item.active {
     color: white !important;
-    background: linear-gradient(135deg, rgba(168, 50, 255, 0.25) 0%, rgba(168, 50, 255, 0.1) 100%);
-    border-color: rgba(168, 50, 255, 0.5);
-    box-shadow: 0 0 20px rgba(168, 50, 255, 0.2);
+    background: linear-gradient(135deg, rgba(41, 127, 240, 0.25) 0%, rgba(41, 127, 240, 0.1) 100%);
+    border-color: rgba(41, 127, 240, 0.5);
+    box-shadow: 0 0 20px rgba(41, 127, 240, 0.2);
 }
 
 .nav-item.active:hover {
@@ -288,7 +288,7 @@ body {
 .nav-item:hover i,
 .nav-item.active i {
     transform: scale(1.12);
-    color: var(--primary-purple);
+    color: var(--primary-blue);
     filter: drop-shadow(0 0 4px var(--accent-glow));
 }
 
@@ -336,8 +336,8 @@ button {
 }
 
 button:hover {
-    background: color-mix(in srgb, var(--primary-purple) 15%, transparent);
-    border-color: var(--primary-purple);
+    background: color-mix(in srgb, var(--primary-blue) 15%, transparent);
+    border-color: var(--primary-blue);
     transform: translateY(-2px);
     box-shadow: 0 8px 20px var(--accent-glow);
 }
@@ -348,7 +348,7 @@ button:active {
 
 button i {
     font-size: 1rem;
-    color: var(--primary-purple);
+    color: var(--primary-blue);
     transition: transform var(--duration-normal) var(--ease-spring),
         color var(--duration-normal) var(--ease);
 }
@@ -428,8 +428,8 @@ button:hover i {
 
 .top-tab.active {
     color: white;
-    background: linear-gradient(135deg, rgba(168, 50, 255, 0.15) 0%, rgba(168, 50, 255, 0.05) 100%);
-    border-color: rgba(168, 50, 255, 0.4);
+    background: linear-gradient(135deg, rgba(41, 127, 240, 0.15) 0%, rgba(41, 127, 240, 0.05) 100%);
+    border-color: rgba(41, 127, 240, 0.4);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     position: relative;
 }
@@ -442,7 +442,7 @@ button:hover i {
     right: 12px;
     height: 3px;
     border-radius: 3px 3px 0 0;
-    background: var(--primary-purple);
+    background: var(--primary-blue);
     box-shadow: 0 0 12px var(--accent-glow);
 }
 
@@ -531,7 +531,7 @@ button:hover i {
 
 .search-wrapper:focus-within {
     background: rgba(255, 255, 255, 0.08);
-    border-color: var(--primary-purple);
+    border-color: var(--primary-blue);
     box-shadow: 0 0 20px var(--accent-glow);
 }
 
@@ -563,9 +563,9 @@ button:hover i {
 
 .add-tab-btn:hover {
     background: linear-gradient(135deg,
-            var(--primary-purple) 0%,
-            var(--secondary-purple) 100%);
-    border-color: var(--primary-purple);
+            var(--primary-blue) 0%,
+            var(--secondary-blue) 100%);
+    border-color: var(--primary-blue);
     color: white;
     transform: scale(1.1) rotate(90deg);
     box-shadow: 0 4px 16px var(--accent-glow);
@@ -585,8 +585,8 @@ button:hover i {
     align-items: center;
     background: #0a0a0f;
     background-image:
-        radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--primary-purple) 15%, transparent) 0%, transparent 50%),
-        radial-gradient(circle at 100% 100%, color-mix(in srgb, var(--tertiary-purple) 10%, transparent) 0%, transparent 50%);
+        radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--primary-blue) 15%, transparent) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, color-mix(in srgb, var(--tertiary-blue) 10%, transparent) 0%, transparent 50%);
 }
 
 .panel,
@@ -629,7 +629,6 @@ button:hover i {
     font-weight: 700;
     color: white;
     margin-bottom: 12px;
-    text-transform: lowercase;
 }
 
 .panel-content {
@@ -719,13 +718,13 @@ button:hover i {
 }
 
 .disguise-option:has(input:checked) {
-    border-color: var(--primary-purple);
+    border-color: var(--primary-blue);
     background: rgba(184, 77, 255, 0.1);
 }
 
 .disguise-option input:checked~.disguise-circle {
-    border-color: var(--primary-purple);
-    background: var(--primary-purple);
+    border-color: var(--primary-blue);
+    background: var(--primary-blue);
     box-shadow: 0 0 12px var(--accent-glow);
 }
 
@@ -762,7 +761,7 @@ button:hover i {
 .setup-input:focus,
 .setup-input:active {
     background: rgba(255, 255, 255, 0.06);
-    border-color: var(--primary-purple);
+    border-color: var(--primary-blue);
     box-shadow: 0 0 15px var(--accent-glow);
 }
 
@@ -817,7 +816,7 @@ iframe,
 
 .cloak-box:hover {
     background: rgba(255, 255, 255, 0.05);
-    border-color: var(--primary-purple);
+    border-color: var(--primary-blue);
 }
 
 .cloak-box span {
@@ -841,8 +840,8 @@ iframe,
 }
 
 #cloaking-toggle:checked {
-    border-color: var(--primary-purple);
-    background: var(--primary-purple);
+    border-color: var(--primary-blue);
+    background: var(--primary-blue);
     box-shadow: 0 0 15px var(--accent-glow);
 }
 
@@ -904,7 +903,7 @@ iframe,
 
 .game-card:hover .game-thumbnail {
     transform: translateY(-8px);
-    border-color: var(--primary-purple);
+    border-color: var(--primary-blue);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
         0 0 20px var(--accent-glow);
 }
@@ -945,7 +944,7 @@ iframe,
 
 .log-entry:hover {
     background: rgba(159, 26, 255, 0.03);
-    border-color: var(--primary-purple);
+    border-color: var(--primary-blue);
 }
 
 .log-header {
@@ -960,7 +959,7 @@ iframe,
 .version {
     font-size: 0.9rem;
     font-weight: 700;
-    color: var(--primary-purple);
+    color: var(--primary-blue);
 }
 
 .date {
@@ -987,7 +986,7 @@ iframe,
     width: 15px;
     font-size: 0.7rem;
     text-align: center;
-    color: var(--primary-purple);
+    color: var(--primary-blue);
 }
 
 /* --- Floating Buttons --- */
@@ -1026,7 +1025,7 @@ iframe,
 .game-close:hover,
 .fullscreen-btn:hover {
     background: rgba(184, 77, 255, 0.12);
-    border-color: var(--primary-purple);
+    border-color: var(--primary-blue);
     transform: translateY(-4px) scale(1.02);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
         0 0 20px var(--accent-glow);
@@ -1034,7 +1033,7 @@ iframe,
 
 .game-close i,
 .fullscreen-btn i {
-    color: var(--primary-purple);
+    color: var(--primary-blue);
 }
 
 /* --- Terminal Page Loader (Top-Left Alignment) --- */
@@ -1102,7 +1101,7 @@ iframe,
     margin-left: 3px;
     border-radius: 1px;
     vertical-align: text-bottom;
-    background: linear-gradient(180deg, var(--primary-purple), var(--secondary-purple));
+    background: linear-gradient(180deg, var(--primary-blue), var(--secondary-blue));
     box-shadow: 0 0 8px var(--accent-glow);
     animation: cursorBlink 1s step-end infinite;
 }
@@ -1237,7 +1236,7 @@ sidebar .nav-item:last-of-type {
 
 .status-item i {
     font-size: 0.9rem;
-    color: var(--primary-purple);
+    color: var(--primary-blue);
     /* Ensure no margin-right is pushing the icon when the span is hidden */
     margin: 0; 
     transition: transform 0.3s var(--ease-spring);
@@ -1259,7 +1258,7 @@ sidebar .nav-item:last-of-type {
 
 .status-item i {
     font-size: 0.9rem;
-    color: var(--primary-purple);
+    color: var(--primary-blue);
     transition: transform 0.3s var(--ease-spring);
 }
 
@@ -1293,7 +1292,7 @@ sidebar .nav-item:last-of-type {
     margin: 10px 0 0 0; 
     font-weight: 700;
     font-size: 1.1rem;
-    color: var(--primary-purple);
+    color: var(--primary-blue);
     text-align: center;
     white-space: nowrap;
     display: block; 
@@ -1401,7 +1400,7 @@ sidebar .nav-item:last-of-type {
     min-width: 46px;
     margin: 0 auto 16px auto;
     border-radius: 0;
-    background: linear-gradient(135deg, var(--primary-purple), var(--tertiary-purple));
+    background: linear-gradient(135deg, var(--primary-blue), var(--tertiary-blue));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1458,7 +1457,7 @@ sidebar .nav-item:last-of-type {
     width: 4px;
     height: 70%;
     border-radius: 0 4px 4px 0;
-    background: linear-gradient(180deg, var(--primary-purple), var(--secondary-purple));
+    background: linear-gradient(180deg, var(--primary-blue), var(--secondary-blue));
     transform: translateY(-50%) scaleY(0);
     transition: transform var(--duration-nav-item) var(--ease-smooth);
     box-shadow: 0 0 8px var(--accent-glow);
@@ -1522,7 +1521,7 @@ sidebar .nav-item:last-of-type {
 .chat-layout .nav-item:hover i,
 .chat-layout .nav-item.active i {
     transform: scale(1.12);
-    color: var(--primary-purple);
+    color: var(--primary-blue);
     filter: drop-shadow(0 0 4px var(--accent-glow));
 }
 
@@ -1644,7 +1643,7 @@ sidebar .nav-item:last-of-type {
     background: linear-gradient(135deg, rgba(168, 50, 255, 0.15) 0%, rgba(168, 50, 255, 0.08) 100%);
     color: var(--text-main);
     border-color: rgba(168, 50, 255, 0.3);
-    border-left: 3px solid var(--primary-purple);
+    border-left: 3px solid var(--primary-blue);
     box-shadow: 0 0 15px rgba(168, 50, 255, 0.1);
 }
 
@@ -1657,7 +1656,7 @@ sidebar .nav-item:last-of-type {
 .chan-item:hover i,
 .chan-item.active i {
     opacity: 1;
-    color: var(--primary-purple);
+    color: var(--primary-blue);
 }
 
 /* Chat Area - Connected Style */
@@ -1715,7 +1714,7 @@ sidebar .nav-item:last-of-type {
     width: 36px;
     height: 36px;
     border-radius: var(--radius-lg);
-    background: linear-gradient(135deg, var(--primary-purple), var(--tertiary-purple));
+    background: linear-gradient(135deg, var(--primary-blue), var(--tertiary-blue));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1747,7 +1746,7 @@ sidebar .nav-item:last-of-type {
 }
 
 .username:hover {
-    color: var(--primary-purple);
+    color: var(--primary-blue);
 }
 
 .timestamp {
@@ -1778,7 +1777,7 @@ sidebar .nav-item:last-of-type {
 }
 
 .badge-site {
-    background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
     color: white;
     box-shadow: 0 0 12px var(--accent-glow);
 }
@@ -1814,7 +1813,7 @@ sidebar .nav-item:last-of-type {
 }
 
 .input-wrapper:focus-within {
-    border-color: var(--primary-purple);
+    border-color: var(--primary-blue);
     background: rgba(255, 255, 255, 0.07);
     transform: translateY(-2px);
 }
@@ -1881,7 +1880,7 @@ sidebar .nav-item:last-of-type {
 
 .dropdown-item:hover {
     background: rgba(168, 50, 255, 0.1);
-    color: var(--primary-purple);
+    color: var(--primary-blue);
 }
 
 .dropdown-item i {
@@ -1974,7 +1973,7 @@ sidebar .nav-item:last-of-type {
 
 .form-input:focus {
     outline: none;
-    border-color: var(--primary-purple);
+    border-color: var(--primary-blue);
     background: rgba(255, 255, 255, 0.08);
 }
 
@@ -1992,7 +1991,7 @@ sidebar .nav-item:last-of-type {
 
 .form-select:focus {
     outline: none;
-    border-color: var(--primary-purple);
+    border-color: var(--primary-blue);
     background: rgba(255, 255, 255, 0.08);
 }
 
@@ -2018,13 +2017,13 @@ sidebar .nav-item:last-of-type {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
-    border-color: var(--primary-purple);
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    border-color: var(--primary-blue);
     color: white;
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, var(--secondary-purple), var(--primary-purple));
+    background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
     transform: translateY(-1px);
 }
 
@@ -2055,7 +2054,7 @@ sidebar .nav-item:last-of-type {
     width: 32px;
     height: 32px;
     border-radius: var(--radius-sm);
-    background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2149,7 +2148,7 @@ sidebar .nav-item:last-of-type {
 
 .profile-dropdown-item:hover {
     background: rgba(168, 50, 255, 0.1);
-    color: var(--primary-purple);
+    color: var(--primary-blue);
 }
 
 .profile-dropdown-item i {
@@ -2189,8 +2188,8 @@ sidebar .nav-item:last-of-type {
 
 .icon-option.selected {
     background: rgba(168, 50, 255, 0.2);
-    border-color: var(--primary-purple);
-    color: var(--primary-purple);
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
     transform: scale(1.05);
 }
 
@@ -2221,7 +2220,7 @@ sidebar .nav-item:last-of-type {
 
 .tab-btn.active {
     background: rgba(168, 50, 255, 0.2);
-    color: var(--primary-purple);
+    color: var(--primary-blue);
 }
 
 .friends-search {
@@ -2258,7 +2257,7 @@ sidebar .nav-item:last-of-type {
     width: 32px;
     height: 32px;
     border-radius: var(--radius-sm);
-    background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2305,8 +2304,8 @@ sidebar .nav-item:last-of-type {
 
 .friend-btn.primary {
     background: rgba(168, 50, 255, 0.2);
-    border-color: var(--primary-purple);
-    color: var(--primary-purple);
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
 }
 
 .friend-btn.primary:hover {

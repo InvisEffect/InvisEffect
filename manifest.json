@@ -1,6 +1,6 @@
 {
-    "name": "MT Central",
-    "short_name": "MT Central",
+    "name": "InvisEffect",
+    "short_name": "InvisEffect",
     "description": "The central hub for games and tools.",
     "start_url": "./index.html",
     "display": "standalone",
