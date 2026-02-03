@@ -8,40 +8,41 @@
     <script src="scripts/background.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        async function checkAccess() {
-            const SB_URL = 'https://jiswtmhtafbpldvulblw.supabase.co';
-            const SB_KEY = 'sb_publishable_F3kZqGgK0_Cw112qu0Us5Q_XJDIr0zm';
-            const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+        const SB_URL = 'https://jiswtmhtafbpldvulblw.supabase.co';
+        const SB_KEY = 'sb_publishable_F3kZqGgK0_Cw112qu0Us5Q_XJDIr0zm';
+        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
+        async function checkAccess() {
+            // 1. Hide content by default
             document.querySelector('.content').style.display = 'none';
 
-            const entry = prompt("Enter Admin Password:");
-
-            if (!entry) {
-                alert("No password given. Access Denied.");
-                window.location.href = "games.html";
+            // 2. Get user from your chat session
+            const saved = localStorage.getItem('chat_session');
+            if (!saved) {
+                alert("Please login first.");
+                window.location.href = "chat.html";
+                return;
             }
 
-            const { data, error } = await supabaseClient
-                .from('admin_settings')
-                .select('value')
-                .eq('id', 'admin_password')
-                .eq('value', entry)
-                .maybeSingle();
+            const currentUser = JSON.parse(saved);
 
-            if (error || !data) {
-                alert("Invalid password. Access Denied.");
+            // 3. Verify role directly from the database (prevents Inspect Element tampering)
+            const { data, error } = await supabaseClient
+                .from('profiles')
+                .select('role')
+                .eq('id', currentUser.id)
+                .single();
+
+            if (error || !data || data.role !== 'admin') {
+                alert("Access Denied: Admins Only.");
                 window.location.href = "games.html";
             } else {
-                console.log("Access Granted");
+                // Access Granted
                 document.querySelector('.content').style.display = 'flex';
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelector('.content').style.display = 'none';
-            checkAccess();
-        });
+        document.addEventListener('DOMContentLoaded', checkAccess);
     </script>
 </head>
 
@@ -96,11 +97,6 @@
     <canvas id="bg-canvas"></canvas>
 
     <script>
-        // Replace these with YOUR actual Supabase credentials
-        const SB_URL = 'https://jiswtmhtafbpldvulblw.supabase.co';
-        const SB_KEY = 'sb_publishable_F3kZqGgK0_Cw112qu0Us5Q_XJDIr0zm';
-        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-
         async function uploadGame() {
             const title = document.getElementById('title').value;
             const category = document.getElementById('category').value;

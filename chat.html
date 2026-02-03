@@ -329,7 +329,13 @@
                 roleEl.className = `role-badge tag-${user.role}`;
             }
 
-            // Fix the Lobby Link ID for notifications
+            const isAdminOrMod = user.role === 'admin' || user.role === 'mod';
+            document.getElementById('gatekeeper-panel').style.display = isAdminOrMod ? 'flex' : 'none';
+
+            // BUT only show the "Pending Approvals" list to Admins
+            const requestsList = document.getElementById('requests-list');
+            if (requestsList) requestsList.style.display = (user.role === 'admin') ? 'block' : 'none';
+
             const listItems = document.querySelectorAll('.list-item');
             listItems.forEach(item => {
                 if (item.getAttribute('onclick')?.includes('switchToLobby')) {
@@ -412,11 +418,25 @@
             if (!content || !currentUser) return;
 
             const table = activeDM ? 'direct_messages' : 'messages';
-            const payload = { content, sender_id: currentUser.id, sender_name: currentUser.username, sender_role: currentUser.role };
+
+            // Ensure sender_id is the currentUser.id which matches the DB
+            const payload = {
+                content,
+                sender_id: currentUser.id, // This must match the ID in your profiles table
+                sender_name: currentUser.username,
+                sender_role: currentUser.role
+            };
+
             if (activeDM) payload.receiver_id = activeDM;
 
-            await sb.from(table).insert([payload]);
-            input.value = '';
+            const { error } = await sb.from(table).insert([payload]);
+
+            if (error) {
+                console.error("Message error:", error.message);
+                alert("Failed to send: " + error.message);
+            } else {
+                input.value = '';
+            }
         }
 
         function renderMessage(msg) {
@@ -494,9 +514,10 @@
                 const { data } = await sb.from('profiles').select('*').eq('id', id).eq('password', pass).single();
                 if (data?.is_approved) {
                     currentUser = data;
+                    // IMPORTANT: Save the whole user object including the role
                     localStorage.setItem('chat_session', JSON.stringify(data));
                     applyLoginState(data);
-                } else alert("Invalid/Pending");
+                }
             }
         }
         function toggleAuthMode() { isSignUpMode = !isSignUpMode; document.getElementById('auth-title').innerText = isSignUpMode ? 'Sign Up' : 'Login'; document.getElementById('username-auth').style.display = isSignUpMode ? 'block' : 'none'; }
@@ -515,7 +536,38 @@
         }
         async function approveUser(id) { await sb.from('profiles').update({ is_approved: true }).eq('id', id); loadRequests(); }
         function logout() { localStorage.clear(); location.reload(); }
-        async function clearChat() { if (confirm("Clear Lobby?")) { await sb.from('messages').delete().neq('id', 0); loadMessages(); } }
+        async function clearChat() {
+            const saved = localStorage.getItem('chat_session');
+            if (!saved) return alert("Please log in.");
+
+            const user = JSON.parse(saved);
+
+            const { data: profile } = await sb
+                .from('profiles')
+                .select('role')
+                .eq('id', user.id)
+                .single();
+
+            if (profile?.role !== 'admin') {
+                alert("Unauthorized: Only admins can clear the chat.");
+                return;
+            }
+
+            if (profile?.role !== 'admin' && profile?.role !== 'mod') {
+                alert("Unauthorized: Only admins or mods can clear the chat.");
+                return;
+            }
+
+            if (confirm("Are you sure you want to clear the Public Lobby?")) {
+                const { error } = await sb.from('messages').delete().neq('id', 0);
+
+                if (error) {
+                    alert("Error: " + error.message);
+                } else {
+                    loadMessages();
+                }
+            }
+        }
     </script>
 </body>
 
