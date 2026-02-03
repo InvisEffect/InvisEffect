@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="stylesheet.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="scripts/background.js"></script>
+    <style>
+        /* Layout Structure */
+        .chat-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 280px;
+            gap: 20px;
+            height: calc(100vh - 40px);
+            width: 100%;
+            max-width: 1400px;
+            opacity: 0.3;
+            pointer-events: none;
+            transition: opacity 0.5s, grid-template-columns 0.3s ease;
+        }
+
+        .chat-container.no-admin {
+            grid-template-columns: 280px 1fr;
+        }
+
+        .chat-panel {
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .messages-display {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            width: 100%;
+        }
+
+        /* Status Indicators */
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .status-online {
+            background: #22c55e;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        .status-idle {
+            background: #f59e0b;
+            box-shadow: 0 0 8px #f59e0b;
+        }
+
+        .role-badge {
+            font-size: 10px;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        #auth-blur {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #auth-overlay {
+            position: relative;
+            z-index: 1000;
+            width: 380px;
+        }
+
+        body.logged-in #auth-blur {
+            display: none !important;
+        }
+
+        body.logged-in .chat-container {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .role-tag {
+            font-size: 10px;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            color: white !important;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .tag-admin {
+            background: #ef4444 !important;
+        }
+
+        .tag-mod {
+            background: #f59e0b !important;
+        }
+
+        .tag-user {
+            background: var(--primary-blue) !important;
+        }
+
+        .dm-item {
+            padding: 10px;
+            margin: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dm-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body class="iframe-body" style="justify-content: center; align-items: center; display: flex;">
+
+    <div id="auth-blur">
+        <div id="auth-overlay" class="panel" style="padding: 30px;">
+            <div class="panel-title" id="auth-title">Login</div>
+            <div class="panel-content">
+                <div class="form-group">
+                    <div class="text-container">
+                        <div class="text-wrapper">
+                            <input type="text" id="userid" class="text-bar" placeholder="User ID">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="text-container">
+                        <div class="text-wrapper">
+                            <input type="password" id="password" class="text-bar" placeholder="Password">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div id="username-auth" class="text-container" style="display: none;">
+                        <div class="text-wrapper">
+                            <input type="text" id="username" class="text-bar" placeholder="Username">
+                        </div>
+                    </div>
+                </div>
+                <button id="auth-submit-btn" onclick="handleAuth()" style="width: 100%;">Log In</button>
+                <p id="auth-toggle" onclick="toggleAuthMode()"
+                    style="font-size: 12px; color: var(--text-dim); margin-top: 15px; cursor: pointer; text-align: center;">
+                    Need an account? Sign Up</p>
+                <p id="debug-status" style="font-size: 11px; color: #ef4444; margin-top: 12px; text-align: center;"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <aside class="chat-panel">
+            <div class="chat-header">
+                <span>Chat Rooms</span>
+                <i class="fa-solid fa-right-from-bracket" onclick="logout()"
+                    style="cursor:pointer; color: var(--text-dim);" title="Logout"></i>
+            </div>
+            <div class="panel-content">
+                <div class="list-item" onclick="switchToLobby()"
+                    style="margin: 10px; background: rgba(41, 127, 240, 0.1); border-left: 3px solid var(--primary-blue); padding: 12px; border-radius: 10px; cursor: pointer;">
+                    <i class="fa-solid fa-earth-americas" style="color: var(--primary-blue);"></i>
+                    <span style="color: white; font-weight: 600; margin-left: 10px;">Public Lobby</span>
+                </div>
+
+                <div
+                    style="padding: 10px 20px; font-size: 12px; color: var(--text-dim); text-transform: uppercase; border-top: 1px solid var(--glass-border); margin-top: 10px;">
+                    Online Users (<span id="online-count">0</span>)
+                </div>
+                <div id="online-list" style="padding: 5px 10px;"></div>
+
+                <div
+                    style="padding: 10px 20px; font-size: 12px; color: var(--text-dim); text-transform: uppercase; margin-top: 20px;">
+                    Direct Messages</div>
+                <div id="dm-sidebar-list" style="padding: 0 10px;"></div>
+            </div>
+        </aside>
+
+        <main class="chat-panel">
+            <div class="chat-header">
+                <span id="chat-title">Public Lobby</span>
+                <span id="my-role" class="role-badge">User</span>
+            </div>
+            <div class="messages-display" id="chat-box"></div>
+            <div style="padding: 20px; border-top: 1px solid var(--glass-border);">
+                <div class="text-wrapper" style="width: 100%;">
+                    <input type="text" id="msg-input" class="text-bar" placeholder="Type a message..."
+                        onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button class="add-tab-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </main>
+
+        <aside class="chat-panel" id="gatekeeper-panel">
+            <div class="chat-header">
+                <span>Admin Panel</span>
+                <i class="fa-solid fa-shield-halved" style="color: var(--primary-blue);"></i>
+            </div>
+            <div class="panel-content" style="padding: 15px;">
+                <button onclick="clearChat()" style="width: 100%; margin-bottom: 20px;"><i
+                        class="fa-solid fa-trash-can"></i> Clear Chat</button>
+                <div id="requests-list"></div>
+            </div>
+        </aside>
+    </div>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <script>
+        const sb = supabase.createClient('https://jiswtmhtafbpldvulblw.supabase.co', 'sb_publishable_F3kZqGgK0_Cw112qu0Us5Q_XJDIr0zm');
+        let currentUser = null;
+        let activeDM = null;
+        let isSignUpMode = false;
+        // Keep track of which DM windows are open
+        let openConversations = JSON.parse(localStorage.getItem('open_dms') || '[]');
+
+        // --- Session & Presence ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('chat_session');
+            if (saved) {
+                try {
+                    currentUser = JSON.parse(saved);
+                    applyLoginState(currentUser);
+                } catch (e) {
+                    localStorage.removeItem('chat_session');
+                }
+            }
+        });
+
+        function applyLoginState(user) {
+            document.body.classList.add('logged-in');
+            refreshUserUI(user);
+            setupPresence(user);
+            loadMessages();
+            listenMessages();
+            listenToRoleChanges(user.id);
+            restoreDMs(); // Restore the sidebar DMs
+            if (user.role === 'admin') loadRequests();
+        }
+
+        // --- Persistent DM Logic ---
+        function restoreDMs() {
+            // Re-render the sidebar items for DMs we had open
+            openConversations.forEach(conv => {
+                createSidebarDMEntry(conv.id, conv.name);
+            });
+        }
+
+        function saveDMConversation(id, name) {
+            if (!openConversations.find(c => c.id === id)) {
+                openConversations.push({ id, name });
+                localStorage.setItem('open_dms', JSON.stringify(openConversations));
+            }
+        }
+
+        function createSidebarDMEntry(targetId, targetName) {
+            const sidebar = document.getElementById('dm-sidebar-list');
+            if (document.getElementById(`sidebar-dm-${targetId}`)) return;
+
+            const div = document.createElement('div');
+            div.id = `sidebar-dm-${targetId}`;
+            div.className = 'dm-item';
+            div.style.position = "relative";
+            div.style.padding = "4px 10px";
+            div.innerHTML = `<i class="fa-solid fa-user" style="font-size:10px; opacity:0.5;"></i> ${targetName}`;
+            div.onclick = () => {
+                clearNotification(`sidebar-dm-${targetId}`);
+                openDM(targetId, targetName);
+            };
+            sidebar.appendChild(div);
+        }
+
+        function openDM(targetId, targetName) {
+            if (targetId === currentUser.id) return;
+            activeDM = targetId;
+            document.getElementById('chat-title').innerText = `DM: ${targetName}`;
+
+            saveDMConversation(targetId, targetName);
+            createSidebarDMEntry(targetId, targetName);
+            loadMessages();
+        }
+
+        // --- Rest of the Chat Logic ---
+        function refreshUserUI(user) {
+            const roleEl = document.getElementById('my-role');
+            if (roleEl) {
+                roleEl.innerText = user.role.toUpperCase();
+                roleEl.className = `role-badge tag-${user.role}`;
+            }
+
+            // Fix the Lobby Link ID for notifications
+            const listItems = document.querySelectorAll('.list-item');
+            listItems.forEach(item => {
+                if (item.getAttribute('onclick')?.includes('switchToLobby')) {
+                    item.id = 'lobby-link';
+                    item.style.position = 'relative';
+                }
+            });
+
+            document.getElementById('gatekeeper-panel').style.display = (user.role === 'admin') ? 'flex' : 'none';
+            const container = document.querySelector('.chat-container');
+            container.style.gridTemplateColumns = (user.role === 'admin') ? "280px 1fr 280px" : "280px 1fr";
+        }
+
+        function showNotification(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el || el.querySelector('.ping-dot')) return;
+
+            const dot = document.createElement('div');
+            dot.className = 'ping-dot';
+            dot.style = "position:absolute; right:15px; top:50%; transform:translateY(-50%); width:8px; height:8px; background:#ef4444; border-radius:50%; box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); pointer-events: none;";
+            el.appendChild(dot);
+        }
+
+        function clearNotification(elementId) {
+            const dot = document.querySelector(`#${elementId} .ping-dot`);
+            if (dot) dot.remove();
+        }
+
+        function listenMessages() {
+            sb.channel('public-main').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
+                if (activeDM && payload.new.sender_id !== currentUser.id) {
+                    showNotification('lobby-link');
+                } else if (!activeDM) {
+                    loadMessages();
+                }
+            }).subscribe();
+
+            sb.channel('dm-main').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'direct_messages' }, (payload) => {
+                const isForMe = payload.new.receiver_id === currentUser.id;
+                const isFromMe = payload.new.sender_id === currentUser.id;
+
+                if (isForMe || isFromMe) {
+                    const otherPartyId = isFromMe ? payload.new.receiver_id : payload.new.sender_id;
+                    const otherPartyName = payload.new.sender_name; // fallback if needed
+
+                    if (activeDM === otherPartyId) {
+                        loadMessages();
+                    } else if (isForMe) {
+                        // If they aren't in our sidebar yet, add them so the dot has somewhere to go
+                        createSidebarDMEntry(otherPartyId, otherPartyName);
+                        showNotification(`sidebar-user-${otherPartyId}`);
+                        showNotification(`sidebar-dm-${otherPartyId}`);
+                    }
+                }
+            }).subscribe();
+        }
+
+        // Standard helpers
+        function switchToLobby() {
+            activeDM = null;
+            document.getElementById('chat-title').innerText = "Public Lobby";
+            clearNotification('lobby-link');
+            loadMessages();
+        }
+
+        async function loadMessages() {
+            let query = activeDM
+                ? sb.from('direct_messages').select('*').or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeDM}),and(sender_id.eq.${activeDM},receiver_id.eq.${currentUser.id})`)
+                : sb.from('messages').select('*');
+
+            const { data } = await query.order('created_at', { ascending: true }).limit(100);
+            const box = document.getElementById('chat-box');
+            box.innerHTML = '';
+            data?.forEach(msg => renderMessage(msg));
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('msg-input');
+            const content = input.value.trim();
+            if (!content || !currentUser) return;
+
+            const table = activeDM ? 'direct_messages' : 'messages';
+            const payload = { content, sender_id: currentUser.id, sender_name: currentUser.username, sender_role: currentUser.role };
+            if (activeDM) payload.receiver_id = activeDM;
+
+            await sb.from(table).insert([payload]);
+            input.value = '';
+        }
+
+        function renderMessage(msg) {
+            const box = document.getElementById('chat-box');
+            if (!box) return;
+
+            const div = document.createElement('div');
+            // The container uses a specific margin to separate messages vertically
+            div.style.marginBottom = "8px";
+            div.style.lineHeight = "1.4";
+
+            // Time parsing
+            const dateObj = msg.created_at ? new Date(msg.created_at) : new Date();
+            const time = isNaN(dateObj.getTime()) ? "..." : dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const roleClass = msg.sender_role === 'admin' ? 'tag-admin' : (msg.sender_role === 'mod' ? 'tag-mod' : 'tag-user');
+
+            // WE ARE REMOVING FLEXBOX FROM THE INNER WRAPPER.
+            // By using <span> and display:inline, they will flow like text.
+            div.innerHTML = `
+        <span class="role-tag ${roleClass}" style="display: inline-block; font-size: 9px; padding: 2px 4px; margin-right: 5px; vertical-align: middle; position: relative; top: -1px;">
+            ${(msg.sender_role || 'user').toUpperCase()}
+        </span>
+
+        <strong style="color: #fff; font-size: 13px; cursor: pointer; margin-right: 4px;" 
+                onclick="openDM('${msg.sender_id}','${msg.sender_name}')">
+            ${msg.sender_name}:
+        </strong>
+
+        <span style="font-size: 14px; color: #e5e7eb; word-wrap: break-word; white-space: pre-wrap;">${msg.content}</span>
+
+        <span class="timestamp" style="font-size: 10px; opacity: 0.3; margin-left: 6px; white-space: nowrap;">
+            ${time}
+        </span>
+    `;
+
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // Remaining Auth/Presence functions...
+        function setupPresence(user) {
+            const channel = sb.channel('online-users', { config: { presence: { key: user.id } } });
+            channel.on('presence', { event: 'sync' }, () => renderOnlineList(channel.presenceState())).subscribe(async (status) => {
+                if (status === 'SUBSCRIBED') channel.track({ name: user.username, status: 'online', id: user.id });
+            });
+        }
+
+        function renderOnlineList(state) {
+            const list = document.getElementById('online-list');
+            const count = document.getElementById('online-count');
+            if (!list || !count) return;
+            list.innerHTML = '';
+            const users = Object.values(state);
+            count.innerText = users.length;
+            users.forEach(u => {
+                const data = u[0];
+                const div = document.createElement('div');
+                div.className = 'dm-item';
+                div.id = `sidebar-user-${data.id}`;
+                div.style = "padding:4px 10px; margin:2px 0; cursor:pointer; position:relative;";
+                div.onclick = () => { clearNotification(`sidebar-user-${data.id}`); openDM(data.id, data.name); };
+                div.innerHTML = `<span class="status-dot ${data.status === 'online' ? 'status-online' : 'status-idle'}" style="width:6px; height:6px;"></span><span style="font-size: 13px;">${data.name}</span>`;
+                list.appendChild(div);
+            });
+        }
+
+        async function handleAuth() {
+            const id = document.getElementById('userid').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            if (isSignUpMode) {
+                const user = document.getElementById('username').value.trim();
+                await sb.from('profiles').insert([{ id, username: user, password: pass, role: 'user', is_approved: false }]);
+                alert("Requested!");
+            } else {
+                const { data } = await sb.from('profiles').select('*').eq('id', id).eq('password', pass).single();
+                if (data?.is_approved) {
+                    currentUser = data;
+                    localStorage.setItem('chat_session', JSON.stringify(data));
+                    applyLoginState(data);
+                } else alert("Invalid/Pending");
+            }
+        }
+        function toggleAuthMode() { isSignUpMode = !isSignUpMode; document.getElementById('auth-title').innerText = isSignUpMode ? 'Sign Up' : 'Login'; document.getElementById('username-auth').style.display = isSignUpMode ? 'block' : 'none'; }
+        function listenToRoleChanges(uid) { sb.channel('roles').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${uid}` }, () => location.reload()).subscribe(); }
+        async function loadRequests() {
+            const { data } = await sb.from('profiles').select('*').eq('is_approved', false);
+            const list = document.getElementById('requests-list');
+            if (!list) return;
+            list.innerHTML = '<div style="font-size: 11px; color: var(--text-dim); margin-bottom: 10px;">Pending Approvals</div>';
+            data?.forEach(u => {
+                const div = document.createElement('div');
+                div.style = "background:rgba(255,255,255,0.05); padding:8px; border-radius:8px; margin-bottom:8px; border:1px solid var(--glass-border);";
+                div.innerHTML = `<div style="font-size:12px; margin-bottom:5px;">${u.username}</div><button onclick="approveUser('${u.id}')" style="width:100%; font-size:10px; background:#22c55e; border:none; color:white; border-radius:4px; cursor:pointer;">Approve</button>`;
+                list.appendChild(div);
+            });
+        }
+        async function approveUser(id) { await sb.from('profiles').update({ is_approved: true }).eq('id', id); loadRequests(); }
+        function logout() { localStorage.clear(); location.reload(); }
+        async function clearChat() { if (confirm("Clear Lobby?")) { await sb.from('messages').delete().neq('id', 0); loadMessages(); } }
+    </script>
+</body>
+
+</html>
