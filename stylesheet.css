@@ -718,7 +718,7 @@ button:hover i {
 
 .disguise-option:has(input:checked) {
     border-color: var(--primary-blue);
-    background: rgba(184, 77, 255, 0.1);
+    background: rgba(77, 104, 255, 0.1);
 }
 
 .disguise-option input:checked~.disguise-circle {
@@ -828,7 +828,7 @@ iframe,
     width: 22px;
     height: 22px;
     position: relative;
-    border-radius: 50%;
+    border-radius: 30%;
     border: 2px solid var(--text-dim);
     background: transparent;
     cursor: pointer;

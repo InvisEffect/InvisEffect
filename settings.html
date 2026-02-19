@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -11,6 +12,10 @@
             align-items: flex-start;
             text-align: left;
         }
+
+        .message-warning {
+            display: none;
+        }
     </style>
 </head>
 
@@ -18,26 +23,34 @@
     <div class="content">
         <div class="panel">
             <div class="panel-title">Settings</div>
-            
+
             <div class="panel-content">
-                <div class="form-group">
+                <div class="form-group" id="cloakingTab">
                     <label class="form-label">Tab Cloaking</label>
                     <button onclick="openAboutBlank()">
-                        <i class="fa-solid fa-mask"></i> Enable about:blank
+                        <i class="fa-solid fa-mask"></i> Cloak Site
                     </button>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Tab Disguise</label>
                     <div class="friend-actions">
-                        <button onclick="setDisguise('Clever', 'https://cdn.jsdelivr.net/gh/nexora240-lgtm/Nexora-Assets/favicon/clever.ico')" class="friend-btn">Clever</button>
-                        <button onclick="setDisguise('Home - Classroom', 'https://ssl.gstatic.com/classroom/favicon.png')" class="friend-btn">Classroom</button>
-                        <button onclick="setDisguise('Home - Google Drive', 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png')" class="friend-btn">Drive</button>
-                        <button onclick="setDisguise('Student Sign In - Seesaw', 'https://cdn.jsdelivr.net/gh/nexora240-lgtm/Nexora-Assets/favicon/seesaw.jpg')" class="friend-btn">Seesaw</button>
-                        <button onclick="setDisguise('Edpuzzle', 'https://edpuzzle.imgix.net/favicons/favicon-32.png')" class="friend-btn">Edpuzzle</button>
-                        <button onclick="setDisguise('Enter Game PIN - Kahoot!', 'https://kahoot.it/favicon.ico')" class="friend-btn">Kahoot</button>
-                        <button onclick="setDisguise('Quizlet: Study Tools & Learning Resources for Students and Teachers | Quizlet', 'https://assets.quizlet.com/_next/static/media/q-twilight.e27821d9.png')" class="friend-btn">Quizlet</button>
-                        <button onclick="setDisguise('Khan Academy | Free Online Courses, Lessons & Practice', 'https://www.khanacademy.org/favicon.ico')" class="friend-btn">Khan Academy</button>
+                        <button
+                            onclick="setDisguise('Clever', 'https://cdn.jsdelivr.net/gh/nexora240-lgtm/Nexora-Assets/favicon/clever.ico')"
+                            class="friend-btn">Clever</button>
+                        <button
+                            onclick="setDisguise('Home - Classroom', 'https://ssl.gstatic.com/classroom/favicon.png')"
+                            class="friend-btn">Classroom</button>
+                        <button
+                            onclick="setDisguise('Home - Google Drive', 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png')"
+                            class="friend-btn">Drive</button>
+                        <button onclick="setDisguise('Edpuzzle', 'https://edpuzzle.imgix.net/favicons/favicon-32.png')"
+                            class="friend-btn">Edpuzzle</button>
+                        <button onclick="setDisguise('Enter Game PIN - Kahoot!', 'https://kahoot.it/favicon.ico')"
+                            class="friend-btn">Kahoot</button>
+                        <button
+                            onclick="setDisguise('Quizlet: Study Tools & Learning Resources for Students and Teachers | Quizlet', './assets/quizletIco.svg')"
+                            class="friend-btn">Quizlet</button>
                     </div>
                 </div>
 
@@ -45,7 +58,8 @@
                     <label class="form-label">Panic Key</label>
                     <div class="text-container">
                         <div class="text-wrapper">
-                            <input type="text" id="panic-key" class="text-bar" placeholder="Click to set key..." readonly>
+                            <input type="text" id="panic-key" class="text-bar" placeholder="Click to set key..."
+                                readonly>
                         </div>
                     </div>
                 </div>
@@ -60,6 +74,8 @@
                 </div>
 
                 <button onclick="saveSettings()">Save</button>
+                <div id="message-warning" style="display: none;">This iframe cannot update your tab live, refresh to retrieve tab updates.
+                </div>
             </div>
         </div>
     </div>
@@ -68,11 +84,11 @@
 
     <script>
         // Load Settings
-        document.getElementById('panic-key').value = localStorage.getItem('panic-key') || 'Not Set';
-        document.getElementById('panic-url').value = localStorage.getItem('panic-url') || 'https://google.com';
+        document.getElementById('panic-key').value = localStorage.getItem('panicKey') || 'Not Set';
+        document.getElementById('panic-url').value = localStorage.getItem('panicUri') || 'https://google.com';
 
         // Set Key Listener
-        document.getElementById('panic-key').addEventListener('click', function() {
+        document.getElementById('panic-key').addEventListener('click', function () {
             this.value = "Listening...";
             const keyHandler = (e) => {
                 e.preventDefault();
@@ -83,46 +99,70 @@
         });
 
         function saveSettings() {
-            localStorage.setItem('panic-key', document.getElementById('panic-key').value);
-            localStorage.setItem('panic-url', document.getElementById('panic-url').value);
+            let currentUrl = document.getElementById('panic-url').value;
+            let savedUrl = currentUrl;
+            if (!currentUrl.includes(".com")) {
+                savedUrl = currentUrl + ".com";
+            }
+
+            localStorage.setItem('panicKey', document.getElementById('panic-key').value);
+            localStorage.setItem('panicUri', savedUrl);
             alert("Settings updated!");
+            location.reload();
         }
 
-        function setDisguise(title, favicon) {
-            localStorage.setItem('tab-title', title);
-            localStorage.setItem('tab-icon', favicon);
-            // Apply to the parent window (index.html)
-            window.parent.document.title = title;
-            let link = window.parent.document.querySelector("link[rel*='icon']") || window.parent.document.createElement('link');
-            link.type = 'image/x-icon';
-            link.rel = 'shortcut icon';
-            link.href = favicon;
-            window.parent.document.getElementsByTagName('head')[0].appendChild(link);
+        function setDisguise(name, icon) {
+            try {
+                top.document.title = name;
+                let link = top.document.querySelector("link[rel~='icon']") || top.document.createElement('link');
+                link.rel = 'icon';
+                link.href = icon;
+                top.document.head.appendChild(link);
+                localStorage.setItem('pref_disguise', JSON.stringify({ name, icon }));
+            } catch (e) {
+                const warning = document.getElementById('messageWarning');
+
+                document.title = name;
+                let link = document.querySelector("link[rel~='icon']") || document.createElement('link');
+                link.rel = 'icon';
+                link.href = icon;
+                document.head.appendChild(link);
+                localStorage.setItem('pref_disguise', JSON.stringify({ name, icon }));
+                warning.style.display = 'flex';
+            }
         }
 
         function resetDisguise() {
-            localStorage.removeItem('tab-title');
-            localStorage.removeItem('tab-icon');
+            localStorage.removeItem('pref_disguise');
             window.parent.location.reload();
         }
 
         function openAboutBlank() {
-            // Gets the root path to load index.html
-            const root = window.location.href.split('settings.html')[0];
-            const win = window.open();
-            if (!win) return alert("Popup blocked!");
-            
-            win.document.body.style.margin = '0';
-            win.document.body.style.height = '100vh';
-            const iframe = win.document.createElement('iframe');
-            iframe.style.border = 'none';
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.src = root + "index.html"; 
-            win.document.body.appendChild(iframe);
-            
-            window.location.replace("https://google.com");
+            const newTab = window.open('about:blank', '_blank');
+            if (!newTab) {
+                alert("Popup blocked! Please allow popups for this site.");
+                return;
+            }
+
+            fetch('index.html').then(async (res) => {
+                let html = await res.text();
+                if (!/<base\s/i.test(html)) {
+                    html = html.replace(/<head.*?>/, match => `${match}\n<base href="${location.origin}/">`);
+                }
+
+                newTab.document.open();
+                newTab.document.write(html);
+                newTab.document.close();
+
+                const aboutBlankBtn = document.getElementById('aboutBlankBtn');
+                if (aboutBlankBtn) {
+                    aboutBlankBtn.style.display = 'none';
+                }
+
+                window.top.location = 'https://www.google.com';
+            });
         }
     </script>
 </body>
+
 </html>

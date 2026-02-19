@@ -29,19 +29,6 @@
 
 <body>
     <canvas id="bg-canvas"></canvas>
-    <div class="page-loader" id="pageLoader">
-        <div id="start-prompt"
-            style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #00ff00; font-family: Consolas, "
-            Lucida Console", monospace; letter-spacing: 2px; font-size: 0.7rem; text-transform: uppercase; opacity:
-            0.6;">
-            press enter...
-        </div>
-        <div class="terminal-wrapper">
-            <div id="terminalBody" class="terminal-body">
-            </div>
-        </div>
-    </div>
-
     <div id="setup-overlay" class="setup-overlay">
         <div class="setup-panel">
 
@@ -65,23 +52,9 @@
                     </label>
                     <label class="disguise-option">
                         <input type="radio" name="disguise_select"
-                            onclick="setDisguise('Canvas', 'https://cdn.jsdelivr.net/gh/nexora240-lgtm/Nexora-Assets/favicon/canvas.png')">
-                        <img src="https://cdn.jsdelivr.net/gh/nexora240-lgtm/Nexora-Assets/favicon/canvas.png">
-                        <span>Canvas</span>
-                        <span class="disguise-circle"></span>
-                    </label>
-                    <label class="disguise-option">
-                        <input type="radio" name="disguise_select"
                             onclick="setDisguise('Drive', 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png')">
                         <img src="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png">
                         <span>Drive</span>
-                        <span class="disguise-circle"></span>
-                    </label>
-                    <label class="disguise-option">
-                        <input type="radio" name="disguise_select"
-                            onclick="setDisguise('Seesaw', 'https://cdn.jsdelivr.net/gh/nexora240-lgtm/Nexora-Assets/favicon/seesaw.jpg')">
-                        <img src="https://cdn.jsdelivr.net/gh/nexora240-lgtm/Nexora-Assets/favicon/seesaw.jpg">
-                        <span>Seesaw</span>
                         <span class="disguise-circle"></span>
                     </label>
                     <label class="disguise-option">
@@ -100,16 +73,9 @@
                     </label>
                     <label class="disguise-option">
                         <input type="radio" name="disguise_select"
-                            onclick="setDisguise('Quizlet', 'https://assets.quizlet.com/a/j/dist/i/favicon.b5f3a0937a06041.ico')">
-                        <img src="https://assets.quizlet.com/a/j/dist/i/favicon.b5f3a0937a06041.ico">
+                            onclick="setDisguise('Quizlet', './assets/quizletIco.svg')">
+                        <img src="./assets/quizletIco.svg">
                         <span>Quizlet</span>
-                        <span class="disguise-circle"></span>
-                    </label>
-                    <label class="disguise-option">
-                        <input type="radio" name="disguise_select"
-                            onclick="setDisguise('Khan', 'https://www.khanacademy.org/favicon.ico')">
-                        <img src="https://www.khanacademy.org/favicon.ico">
-                        <span>Khan</span>
                         <span class="disguise-circle"></span>
                     </label>
                 </div>
@@ -156,7 +122,7 @@
                 class="sidebar-logo">
             <span class="logo-text">InvisEffect</span>
         </div>
-        <div class="nav-item active" onclick="switchMainView('home')">
+        <div class="nav-item" onclick="switchMainView('home')">
             <i class="fa-solid fa-house"></i>
             <span>Home</span>
         </div>
@@ -164,9 +130,9 @@
             <i class="fa-solid fa-gamepad"></i>
             <span>Games</span>
         </div>
-        <div class="nav-item" onclick="switchMainView('chat')">
-            <i class="fa-solid fa-comment"></i>
-            <span>Chat</span>
+        <div class="nav-item" onclick="switchMainView('proxy')">
+            <i class="fa-solid fa-server"></i>
+            <span>Proxy</span>
         </div>
         <div class="nav-item" onclick="switchMainView('updatelog')">
             <i class="fa-solid fa-plus"></i>
@@ -202,7 +168,6 @@
             <div class="text-wrapper">
                 <i class="fa-solid fa-rotate-right" onclick="refreshCurrentTab()"
                     style="cursor: pointer; color: var(--text-dim);"></i>
-                <input type="text" id="urlInput" class="text-bar" placeholder="Search or enter URL...">
             </div>
         </header>
         <section class="viewport" id="viewportContainer">
@@ -224,11 +189,11 @@
 
         function captureKey() {
             const input = document.getElementById('panic-key-input');
-            input.value = "pressing...";
+            input.value = "Pressing...";
             window.addEventListener('keydown', (e) => {
                 const key = e.key.toUpperCase();
                 input.value = key;
-                localStorage.setItem('setup_panicKey', key);
+                localStorage.setItem('panicKey', key);
             }, { once: true });
         }
 
@@ -242,15 +207,15 @@
         }
 
         function finishSetup() {
-            localStorage.setItem('setup_panicUri', document.getElementById('panic-url-input').value);
-            localStorage.setItem('setup_cloaking', document.getElementById('cloaking-toggle').checked);
+            localStorage.setItem('panicUri', document.getElementById('panic-url-input').value);
+            localStorage.setItem('cloaking', document.getElementById('cloaking-toggle').checked);
             localStorage.setItem('setup_done', 'true');
             location.reload();
         }
 
         function applyPanicKey() {
-            const key = localStorage.getItem('setup_panicKey');
-            const url = localStorage.getItem('setup_panicUri') || 'https://classroom.google.com';
+            const key = localStorage.getItem('panicKey');
+            const url = localStorage.getItem('panicUri') || 'https://classroom.google.com';
             if (key) {
                 window.addEventListener('keydown', (e) => {
                     if (e.key.toUpperCase() === key.toUpperCase()) {
@@ -283,10 +248,10 @@
 
                     // Visual feedback for charging/low battery
                     if (battery.charging) {
-                        icon.style.color = '#00ffaa'; // Neon teal when charging
+                        icon.style.color = '#00ffaa';
                         icon.classList.add('fa-charging-station');
                     } else if (battery.level <= 0.2) {
-                        levelDisplay.style.color = '#ff4444'; // Red if low
+                        levelDisplay.style.color = '#ff4444';
                         icon.style.color = '#ff4444';
                     } else {
                         levelDisplay.style.color = 'var(--text-dim)';
@@ -302,172 +267,59 @@
         updateBattery();
 
         window.onload = () => {
-            function playClick() {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(140, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.04);
-            }
-
-            function playBeep() {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.4);
-            }
-
-            const loader = document.getElementById('pageLoader');
-            const terminalBody = document.getElementById('terminalBody');
-            const startPrompt = document.getElementById('start-prompt');
-
-            const initializeBoot = (e) => {
-                if (e.key === "Enter") {
-                    // Unlock Audio Context
-                    if (audioCtx.state === 'suspended') audioCtx.resume();
-
-                    // Hide the glitch prompt
-                    startPrompt.style.display = 'none';
-
-                    // Stop listening for Enter
-                    window.removeEventListener('keydown', initializeBoot);
-
-                    // Run the terminal
-                    runBootSequence();
-                }
-            };
-
-            window.addEventListener('keydown', initializeBoot);
-
-            const bootSequence = [
-                { label: '[ kernel ]', text: 'initializing core architecture...', class: 'status', delay: 1200 },
-                { label: '[ memory ]', text: 'allocating virtual buffer [0x004f21]...', class: 'status', delay: 800 },
-                { label: '[ cpu ]', text: 'optimizing thread affinity...', class: 'status', delay: 600 },
-                { label: '[ disk ]', text: 'mounting /dev/null/assets...', class: 'status', delay: 1000 },
-                { label: '[ fetch ]', text: 'pulling game manifests from remote...', class: 'status', delay: 2000 },
-                { label: '[ fetch ]', text: 'unpacking asset_v4.2.0.bin...', class: 'status', delay: 1500 },
-                { label: '[ ok ]', text: 'cache integrity verified.', class: 'success', delay: 200 },
-                { label: '[ net ]', text: 'pinging mt-relay-01.internal...', class: 'status', delay: 300 },
-                { label: '[ net ]', text: 'latency: 14ms', class: 'success', delay: 50 },
-                { label: '[ auth ]', text: 'handshaking with main server...', class: 'status', delay: 150 },
-                { label: '[ auth ]', text: 'token accepted. welcome user_77', class: 'success', delay: 100 },
-                { label: '[ chat ]', text: 'subscribing to #global-relay...', class: 'status', delay: 120 },
-                { label: '[ ok ]', text: 'chat stream connected.', class: 'success', delay: 80 },
-                { label: '[ prox ]', text: 'routing through d-node: 104.21.3.11...', class: 'status', delay: 150 },
-                { label: '[ ok ]', text: 'proxy initialized.', class: 'success', delay: 50 },
-                { label: '[ cloak ]', text: 'scrubbing referer headers...', class: 'status', delay: 90 },
-                { label: '[ cloak ]', text: 'cloaking tab title & favicon...', class: 'status', delay: 110 },
-                { label: '[ crypt ]', text: 'encrypting local storage...', class: 'status', delay: 130 },
-                { label: '[ shell ]', text: 'rendering viewport...', class: 'status', delay: 200 },
-                { label: '[ ready ]', text: 'welcome.', class: 'success', cursor: true, delay: 1500 }
-            ];
-
-            async function runBootSequence() {
-                for (const lineData of bootSequence) {
-                    const line = document.createElement('div');
-                    line.className = 'terminal-line visible'; // Uses the flex CSS
-                    line.innerHTML = `
-                <span class="${lineData.class}">${lineData.label}</span> 
-                <span>${lineData.text}</span>
-                ${lineData.cursor ? '<span class="terminal-cursor"></span>' : ''}
-            `;
-                    terminalBody.appendChild(line);
-
-                    playClick();
-                    await new Promise(r => setTimeout(r, lineData.delay));
-                }
-
-                playBeep();
-                checkSetup();
-
-                // Final Delay then hide the loader and show the site
-                setTimeout(() => {
-                    loader.classList.add('hidden'); // Triggers the CSS transition
-
-                    // Check if user has finished setup before
-                    if (localStorage.getItem('setup_done') !== 'true') {
-                        document.getElementById('setup-overlay').style.display = 'flex';
-                    } else {
-                        // If already setup, load the actual UI
-                        const saved = JSON.parse(localStorage.getItem('pref_disguise'));
-                        if (saved) setDisguise(saved.name, saved.icon);
-                        applyPanicKey();
-                        renderTabs();
-                        if (tabs.length === 0) createNewTab('home.html', 'home');
-                    }
-                }, 800);
-            }
-
-            function checkSetup() {
-                if (localStorage.getItem('setup_done') !== 'true') {
-                    document.getElementById('setup-overlay').style.display = 'flex';
-                } else {
-                    document.getElementById('setup-overlay').style.display = 'none';
-                    const saved = JSON.parse(localStorage.getItem('pref_disguise'));
-                    if (saved) setDisguise(saved.name, saved.icon);
-                    applyPanicKey();
-                    renderTabs();
-                    // Start with a clean home tab
-                    if (tabs.length === 0) createNewTab('home.html', 'home');
-                }
-            }
+            checkSetup();
         };
+
+        function checkSetup() {
+            if (localStorage.getItem('setup_done') !== 'true') {
+                document.getElementById('setup-overlay').style.display = 'flex';
+            } else {
+                document.getElementById('setup-overlay').style.display = 'none';
+                const saved = JSON.parse(localStorage.getItem('pref_disguise'));
+                if (saved) setDisguise(saved.name, saved.icon);
+                applyPanicKey();
+                renderTabs();
+                if (tabs.length === 0) createNewTab('home.html', 'home');
+            }
+        }
 
         // --- Tab Management Functions ---
         let tabs = [];
         let activeTabId = null;
-        let renderedTabIds = new Set(); // Track which tabs have been rendered
+        let renderedTabIds = new Set();
 
-        /* ---------------- TAB UI ---------------- */
+        const APP_VIEWS = ['home', 'games', 'proxy', 'updatelog', 'suggest', 'settings'];
 
         function renderTabs() {
             const container = document.getElementById('tabContainer');
             const existingTabs = new Map();
 
-            // Store existing tab elements
             container.querySelectorAll('.top-tab').forEach(el => {
                 const tabId = parseInt(el.dataset.tabId);
                 if (tabId) existingTabs.set(tabId, el);
             });
 
-            // Remove add button temporarily
             const addBtn = container.querySelector('.add-tab-btn');
             if (addBtn) addBtn.remove();
 
-            // Update or create tabs
             tabs.forEach(tab => {
                 let tabEl = existingTabs.get(tab.id);
                 const isNew = !tabEl;
 
                 if (isNew) {
-                    // Create new tab element
                     tabEl = document.createElement('div');
                     tabEl.className = `top-tab tab-entering ${tab.id === activeTabId ? 'active' : ''}`;
                     tabEl.dataset.tabId = tab.id;
                     container.appendChild(tabEl);
                     renderedTabIds.add(tab.id);
 
-                    // Remove animation class after animation completes
                     setTimeout(() => {
                         tabEl.classList.remove('tab-entering');
                     }, 400);
                 } else {
-                    // Update existing tab
                     tabEl.className = `top-tab ${tab.id === activeTabId ? 'active' : ''}`;
                 }
 
-                // Update content
                 tabEl.innerHTML = `
                     <span>${tab.title}</span>
                     <i class="fa-solid fa-xmark"
@@ -477,7 +329,6 @@
                 tabEl.onclick = () => switchTab(tab.id);
             });
 
-            // Remove tabs that no longer exist
             existingTabs.forEach((el, tabId) => {
                 if (!tabs.find(t => t.id === tabId)) {
                     el.remove();
@@ -485,7 +336,6 @@
                 }
             });
 
-            // Re-add add button
             if (!container.querySelector('.add-tab-btn')) {
                 const newAddBtn = document.createElement('div');
                 newAddBtn.className = 'add-tab-btn';
@@ -495,10 +345,16 @@
             }
         }
 
-        /* ---------------- IFRAME CONTROL ---------------- */
-
         function createNewTab(url, title) {
             const id = Date.now();
+
+            let tabTitle = title;
+            if (url && url.endsWith('.html')) {
+                let base = url.replace('.html', '');
+                if (APP_VIEWS.includes(base)) {
+                    tabTitle = base;
+                }
+            }
 
             const iframe = document.createElement('iframe');
             iframe.src = url;
@@ -508,7 +364,7 @@
 
             document.getElementById('viewportContainer').appendChild(iframe);
 
-            tabs.push({ id, title, url, iframe });
+            tabs.push({ id, title: tabTitle, url, iframe });
             activeTabId = id;
 
             renderTabs();
@@ -533,7 +389,6 @@
         function switchTab(id) {
             if (id === activeTabId) return;
             activeTabId = id;
-            // Only update active states, don't rebuild everything
             document.querySelectorAll('.top-tab').forEach(el => {
                 const tabId = parseInt(el.dataset.tabId);
                 if (tabId === id) {
@@ -544,8 +399,6 @@
             });
             showActiveIframe();
         }
-
-        /* ---------------- CLOSE TAB ---------------- */
 
         function closeTab(id) {
             if (tabs.length === 1) return;
@@ -569,14 +422,11 @@
                 activeTabId = tabs[Math.max(0, index - 1)].id;
             }
 
-            // Update remaining tabs without full rebuild
             setTimeout(() => {
                 renderTabs();
                 showActiveIframe();
             }, 50);
         }
-
-        /* ---------------- URL BAR ---------------- */
 
         document.getElementById('urlInput').addEventListener('keydown', e => {
             if (e.key !== 'Enter') return;
@@ -587,35 +437,103 @@
             const tab = tabs.find(t => t.id === activeTabId);
             if (!tab) return;
 
+            let useTitle;
+
             if (value.startsWith('inviseffect://')) {
-                value = value.replace('inviseffect://', '') + '.html';
-                tab.title = value.replace('.html', '');
-            } else if (!value.startsWith('http')) {
-                value = value.includes('.')
-                    ? 'https://' + value
-                    : 'https://www.google.com/search?q=' + encodeURIComponent(value);
-                tab.title = 'Search';
+                // Internal/app-like view
+                let view = value.replace('inviseffect://', '').replace('.html', '').toLowerCase();
+                if (APP_VIEWS.includes(view)) {
+                    value = view + '.html';
+                    useTitle = capitalizeView(view);
+                    tab.url = value;
+                    tab.title = useTitle;
+                    tab.iframe.src = value;
+                }
+            }
+            else if (value.endsWith('.html') && APP_VIEWS.includes(value.replace('.html', '').toLowerCase())) {
+                tab.url = value;
+                tab.title = capitalizeView(value.replace('.html', '').toLowerCase());
+                tab.iframe.src = value;
             }
 
-            tab.url = value;
-            tab.iframe.src = value;
-
-            // Update tab title in DOM without full rebuild
             const tabEl = document.querySelector(`.top-tab[data-tab-id="${tab.id}"]`);
             if (tabEl) {
                 const span = tabEl.querySelector('span');
                 if (span) span.textContent = tab.title;
             }
-        });
+            });
 
-        /* ---------------- REFRESH ---------------- */
+        function capitalizeView(str) {
+            if (!str) return str;
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
 
         function refreshCurrentTab() {
             const tab = tabs.find(t => t.id === activeTabId);
             if (tab) tab.iframe.contentWindow.location.reload();
         }
 
-        /* ---------------- SIDEBAR NAV ---------------- */
+        function normalizeAppUrl(url) {
+            const localHosts = [
+                "http://127.0.0.1:5501/",
+                "http://localhost:5501/",
+                window.location.origin + "/"
+            ];
+
+            for (const host of localHosts) {
+                if (url.startsWith(host)) {
+                    let rel = url.substring(host.length);
+                    rel = rel.split(/[?#]/)[0];
+                    let base = rel.replace(/\.html$/, "");
+                    if (base === "" || base === "index") base = "home";
+                    return "inviseffect://" + base;
+                }
+            }
+            return url;
+        }
+
+        function deriveTitleFromUrl(url) {
+            if (url.startsWith('inviseffect://')) {
+                let view = url.replace('inviseffect://', '').replace('.html', '').toLowerCase();
+                if (APP_VIEWS.includes(view)) {
+                    return capitalizeView(view);
+                }
+                return url.replace('inviseffect://', '').replace('.html', '');
+            }
+            // Proxy search detection
+            if (url.startsWith('https://uv.deno.dev/')) {
+                try {
+                    let proxied = decodeURIComponent(url.split('uv.deno.dev/')[1] || "");
+                    if (proxied.startsWith('https://www.google.com/search')) return 'Search';
+                    return proxied;
+                } catch (e) {
+                    return 'Search';
+                }
+            }
+            if (url.startsWith('https://d1zu90j5bdnpus.cloudfront.net/go/?q=')) {
+                try {
+                    let proxied = decodeURIComponent(url.split('?q=')[1]);
+                    if (proxied.startsWith('https://www.google.com/search')) return 'Search';
+                    return proxied;
+                } catch (e) {
+                    return 'Search';
+                }
+            }
+            if (url.startsWith('https://www.google.com/search')) {
+                return 'Search';
+            }
+            if (url.endsWith('.html')) {
+                let base = url.replace('.html', '').toLowerCase();
+                if (APP_VIEWS.includes(base)) {
+                    return capitalizeView(base);
+                }
+                return base;
+            }
+            if (url.startsWith('http')) {
+                return url;
+            }
+            return url;
+        }
 
         function switchMainView(view) {
             const tab = tabs.find(t => t.id === activeTabId);
@@ -625,28 +543,15 @@
             tab.title = view;
             tab.iframe.src = tab.url;
 
-            // Update sidebar active state
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Map view names to nav items
             const viewMap = {
                 'home': 0,
                 'games': 1,
-                'chat': 2,
+                'proxy': 2,
                 'updatelog': 3,
                 'suggest': 4,
                 'settings': 5
             };
 
-            const navItems = document.querySelectorAll('.nav-item');
-            const index = viewMap[view];
-            if (index !== undefined && navItems[index]) {
-                navItems[index].classList.add('active');
-            }
-
-            // Update tab title in DOM without full rebuild
             const tabEl = document.querySelector(`.top-tab[data-tab-id="${tab.id}"]`);
             if (tabEl) {
                 const span = tabEl.querySelector('span');
@@ -655,25 +560,6 @@
 
             showActiveIframe();
         }
-
-        function openSettings() {
-            // Update sidebar active state
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            const navItems = document.querySelectorAll('.nav-item');
-            if (navItems[3]) navItems[3].classList.add('active');
-
-            // Create or switch to settings tab
-            const settingsTab = tabs.find(t => t.url === 'settings.html');
-            if (settingsTab) {
-                switchTab(settingsTab.id);
-            } else {
-                createNewTab('settings.html', 'settings');
-            }
-        }
-
-        /* ---------------- FULLSCREEN ---------------- */
 
         function toggleFullscreen() {
             const el = document.getElementById('viewportContainer');

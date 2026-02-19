@@ -1,19 +1,19 @@
 {
     "name": "InvisEffect",
     "short_name": "InvisEffect",
-    "description": "The central hub for games and tools.",
+    "description": "The best platform to bypass restrictions and content filtering.",
     "start_url": "./index.html",
     "display": "standalone",
-    "background_color": "#0f0f12",
-    "theme_color": "#8a2be2",
+    "background_color": "#070709",
+    "theme_color": "#297ff0",
     "icons": [
         {
-            "src": "https://mtcentral.s3.us-east-1.amazonaws.com/test-branch/assets/logo.png",
+            "src": "./assets/logo.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "https://mtcentral.s3.us-east-1.amazonaws.com/test-branch/assets/logo.png",
+            "src": "./assets/logo.png",
             "sizes": "512x512",
             "type": "image/png"
         }
