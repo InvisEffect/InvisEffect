@@ -55,6 +55,18 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-label">Background Design</label>
+                    <div class="friend-actions">
+                        <button onclick="changeWallpaper('none')" class="friend-btn">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <button onclick="changeWallpaper('matrix')" class="friend-btn">Matrix</button>
+                        <button onclick="changeWallpaper('constellation')" class="friend-btn">Constellation</button>
+                        <button onclick="changeWallpaper('bokeh')" class="friend-btn">Bokeh</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label class="form-label">Panic Key</label>
                     <div class="text-container">
                         <div class="text-wrapper">
@@ -83,11 +95,9 @@
     <canvas id="bg-canvas"></canvas>
 
     <script>
-        // Load Settings
         document.getElementById('panic-key').value = localStorage.getItem('panicKey') || 'Not Set';
         document.getElementById('panic-url').value = localStorage.getItem('panicUri') || 'https://google.com';
 
-        // Set Key Listener
         document.getElementById('panic-key').addEventListener('click', function () {
             this.value = "Listening...";
             const keyHandler = (e) => {
@@ -135,6 +145,18 @@
         function resetDisguise() {
             localStorage.removeItem('pref_disguise');
             window.parent.location.reload();
+        }
+
+        function changeWallpaper(mode) {
+            localStorage.setItem('bg', mode);
+
+            if (typeof window.applyBackgroundDesign === 'function') {
+                window.applyBackgroundDesign(mode);
+            }
+
+            if (window.parent && typeof window.parent.applyBackgroundDesign === 'function') {
+                window.parent.applyBackgroundDesign(mode);
+            }
         }
 
         function openAboutBlank() {
