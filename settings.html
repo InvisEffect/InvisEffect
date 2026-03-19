@@ -34,7 +34,7 @@
 
                 <div class="form-group">
                     <label class="form-label">Tab Disguise</label>
-                    <div class="friend-actions">
+                    <!--<div class="friend-actions">
                         <button
                             onclick="setDisguise('Clever', 'https://cdn.jsdelivr.net/gh/nexora240-lgtm/Nexora-Assets/favicon/clever.ico')"
                             class="friend-btn">Clever</button>
@@ -51,6 +51,23 @@
                         <button
                             onclick="setDisguise('Quizlet: Study Tools & Learning Resources for Students and Teachers | Quizlet', './assets/quizletIco.svg')"
                             class="friend-btn">Quizlet</button>
+                    </div>-->
+                    <div class="dropdown-wrapper">
+                        <select id="disguise-select" class="dropdown-menu" onchange="applyDropdownDisguise()">
+                            <option value="InvisEffect|./logo.png">None</option>
+                            <option value="Clever|https://cdn.jsdelivr.net/gh/nexora240-lgtm/Nexora-Assets/favicon/clever.ico">Clever</option>
+                            <option value="Home - Classroom|https://ssl.gstatic.com/classroom/favicon.png">Google Classroom</option>
+                            <option value="Home - Google Drive|https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png">Google Drive</option>
+                            <option value="Edpuzzle|https://edpuzzle.imgix.net/favicons/favicon-32.png">Edpuzzle</option>
+                            <option value="Enter Game PIN - Kahoot!|https://kahoot.it/favicon.ico">Kahoot</option>
+                            <option value="Quizlet: Study Tools & Learning Resources for Students and Teachers|./assets/quizletIco.svg">Quizlet</option>
+                            <option value="Google Docs|https://ssl.gstatic.com/docs/documents/images/kix-favicon-2023q4.ico">Google Docs</option>
+                            <option value="Google Sheets|https://ssl.gstatic.com/docs/spreadsheets/favicon3.ico">Google Sheets</option>
+                            <option value="Google Slides|https://ssl.gstatic.com/docs/presentations/images/favicon-2023q4.ico">Google Slides</option>
+                            <option value="Canvas|https://raw.githubusercontent.com/instructure/canvas-lms/master/public/favicon.ico">Canvas</option>
+                            <option value="securlypass|https://pass.securly.com/favicon.ico">SecurlyPass</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                     </div>
                 </div>
 
@@ -117,8 +134,34 @@
 
             localStorage.setItem('panicKey', document.getElementById('panic-key').value);
             localStorage.setItem('panicUri', savedUrl);
+            applyDropdownDisguise();
+
             alert("Settings updated!");
             location.reload();
+        }
+
+        function applyDropdownDisguise() {
+            const select = document.getElementById('disguise-select');
+            const [name, icon] = select.value.split('|');
+            
+            setDisguise(name, icon);
+            
+            if (window.parent && window.parent.setDisguise) {
+                window.parent.setDisguise(name, icon);
+            }
+        }
+
+        function loadSavedDisguise() {
+            const saved = JSON.parse(localStorage.getItem('pref_disguise'));
+            if (saved) {
+                const select = document.getElementById('disguise-select');
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value.includes(saved.icon)) {
+                        select.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
         }
 
         function setDisguise(name, icon) {
@@ -184,6 +227,8 @@
                 window.top.location = 'https://www.google.com';
             });
         }
+
+        window.addEventListener('DOMContentLoaded', loadSavedDisguise);
     </script>
 </body>
 
