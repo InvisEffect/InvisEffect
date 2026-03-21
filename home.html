@@ -29,10 +29,10 @@
         </div>
         <div class="panel">
             <div class="panel-content">
-                <button onclick="document.location='./games.html';"><i class="fa-solid fa-gamepad"></i> Games</button>
-                <button onclick="document.location='./proxy.html';"><i class="fa-solid fa-server"></i> Proxy</button>
-                <button onclick="document.location='./updatelog.html';"><i class="fa-solid fa-plus"></i> Update Logs</button>
-                <button onclick="document.location='./settings.html';"><i class="fa-solid fa-gear"></i> Settings</button>
+                <button onclick="window.parent.switchMainView('games')"><i class="fa-solid fa-gamepad"></i> Games</button>
+                <button onclick="window.parent.switchMainView('proxy')"><i class="fa-solid fa-server"></i> Proxy</button>
+                <button onclick="window.parent.switchMainView('updatelog')"><i class="fa-solid fa-plus"></i> Update Logs</button>
+                <button onclick="window.parent.switchMainView('settings')"><i class="fa-solid fa-gear"></i> Settings</button>
             </div>
         </div>
     </div>
